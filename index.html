@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student Biryani JVC — Karachi biryani since 1969</title>
+<meta name="description" content="Biryani cooked in layers since 1969, at Mulberry 1, JVC. Chicken biryani from AED 30, plus nihari, haleem and karahi. Open daily 11 AM to midnight.">
+<meta name="theme-color" content="#F7EFDF">
+<meta property="og:title" content="Student Biryani JVC — Karachi biryani since 1969">
+<meta property="og:description" content="Biryani cooked in layers since 1969, at Mulberry 1, JVC. Chicken biryani from AED 30, plus nihari, haleem and karahi. Open daily 11 AM to midnight.">
+<meta property="og:image" content="assets/chicken-biryani.webp">
+<link rel="icon" href="assets/favicon.svg">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Restaurant",
+ "name": "Student Biryani JVC",
+ "description": "Pakistani biryani restaurant in Jumeirah Village Circle, Dubai — the JVC branch of a Karachi kitchen founded in 1969.",
+ "servesCuisine": [
+  "Pakistani",
+  "Biryani",
+  "Barbecue"
+ ],
+ "priceRange": "AED 15–150",
+ "telephone": "+971 4 554 6215",
+ "address": {
+  "@type": "PostalAddress",
+  "streetAddress": "Mulberry 1, Emirates Garden 2, Shop #1, District 14, Jumeirah Village Circle",
+  "addressLocality": "Dubai",
+  "addressCountry": "AE"
+ },
+ "geo": {
+  "@type": "GeoCoordinates",
+  "latitude": 25.0499776,
+  "longitude": 55.2054442
+ },
+ "openingHoursSpecification": [
+  {
+   "@type": "OpeningHoursSpecification",
+   "dayOfWeek": [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday"
+   ],
+   "opens": "11:00",
+   "closes": "00:00"
+  }
+ ],
+ "hasMenu": "https://studentbiryani.ae/restaurant-order/",
+ "sameAs": [
+  "https://studentbiryani.ae/",
+  "https://www.instagram.com/studentbiryaniuae"
+ ],
+ "hasMap": "https://www.google.com/maps/place/Student+Biryani+JVC/@25.0499776,55.2054442,17z"
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Karla:wght@300;400;500;600&family=Archivo:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<style>
+:root{
+  --step-0: clamp(1rem, .97rem + .2vw, 1.08rem);
+  --step-1: clamp(1.12rem, 1.06rem + .3vw, 1.3rem);
+  --step-2: clamp(1.36rem, 1.22rem + .62vw, 1.74rem);
+  --step-3: clamp(1.85rem, 1.5rem + 1.6vw, 2.9rem);
+  --step-4: clamp(2.5rem, 1.7rem + 3.4vw, 4.6rem);
+  --ease: cubic-bezier(.2,.7,.3,1);
+  --max: 1240px;
+  --gutter: 2.5rem;
+  --section-pad: 5rem;
+  --flow: 1rem;
+  --measure: 42ch;
+  --bg: #F7EFDF;
+  --surface: #FDF7EC;
+  --surface-2: #EDE1C9;
+  --text: #1D1B16;
+  --muted: #655B4C;
+  --accent: #C4391E;
+  --accent-ink: #FFF6E8;
+  --accent-2: #1F4234;
+  --accent-wash: rgb(196 57 30 / .1);
+  --line: rgb(29 27 22 / .16);
+  --line-strong: rgb(29 27 22 / .44);
+  --radius: 0px;
+  --radius-sm: 0px;
+  --shadow: 0 26px 44px -38px rgb(29 27 22 / .55);
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Karla", system-ui, sans-serif;
+  --font-ui: "Archivo", "Helvetica Neue", sans-serif;
+  --body-weight: 400;
+  --display-weight: 700;
+  --display-lh: .88;
+  --display-ls: -.035em;
+  --display-case: none;
+  --ui-weight: 600;
+  --btn-case: uppercase;
+  --btn-ls: .12em;
+  --wa: #25D366;
+  --wa-ink: #04301d;
+  --ok: #3C7A5A;
+  --focus-ring: rgb(196 57 30 / .18);
+  --input-bg: #FDF7EC;
+  --map-filter: sepia(.18) saturate(.85) contrast(.96);
+}
+/* ─────────────────────────────────────────────────────────────
+   primitives.css — the only file allowed to touch raw values.
+   Components consume tokens only: var(--bg), var(--accent), …
+   ───────────────────────────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.65;
+  font-weight: var(--body-weight, 300);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: 1rem; top: 1rem; z-index: 999; background: #fff; color: #000; padding: .6rem 1rem; }
+
+/* ── layout ─────────────────────────────────────────────── */
+.u-wrap { width: min(var(--max), 100% - var(--gutter, 2.5rem)); margin-inline: auto; }
+.u-stack > * + * { margin-top: var(--flow, 1rem); }
+.u-center { text-align: center; margin-inline: auto; }
+
+/* ── type ───────────────────────────────────────────────── */
+.u-eyebrow {
+  font-family: var(--font-ui);
+  font-size: .74rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  font-weight: var(--ui-weight, 500);
+  color: var(--accent);
+  display: inline-block;
+}
+.u-display, .u-h1, .u-h2, .u-h3 {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight, 400);
+  line-height: var(--display-lh, 1.04);
+  letter-spacing: var(--display-ls, -.02em);
+  text-transform: var(--display-case, none);
+  margin: 0;
+}
+.u-h1 { font-size: var(--step-4); }
+.u-h2 { font-size: var(--step-3); }
+.u-h3 { font-size: var(--step-1); line-height: 1.2; }
+.u-lede { color: var(--muted); font-size: var(--step-1); max-width: var(--measure, 46ch); }
+.u-accent { color: var(--accent); }
+.u-em { font-style: italic; color: var(--accent); }
+
+/* ── buttons ────────────────────────────────────────────── */
+.btn {
+  --btn-bg: var(--accent);
+  --btn-fg: var(--accent-ink, #fff);
+  --btn-bd: transparent;
+  display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
+  font-family: var(--font-ui);
+  font-size: var(--btn-size, .84rem);
+  font-weight: var(--ui-weight, 600);
+  letter-spacing: var(--btn-ls, .08em);
+  text-transform: var(--btn-case, none);
+  padding: var(--btn-pad, .85rem 1.5rem);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--btn-bd);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  cursor: pointer;
+  transition: transform .22s var(--ease), background .22s, color .22s, border-color .22s, box-shadow .25s;
+  white-space: nowrap;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.btn svg { width: 1.05em; height: 1.05em; flex: none; }
+
+.btn--outline { --btn-bg: transparent; --btn-fg: var(--text); --btn-bd: var(--line-strong, var(--line)); }
+.btn--outline:hover { --btn-bd: var(--accent); }
+.btn--ghost { --btn-bg: var(--surface-2); --btn-fg: var(--text); --btn-bd: transparent; }
+.btn--wa { --btn-bg: var(--wa); --btn-fg: var(--wa-ink, #04301d); }
+.btn--sm { --btn-pad: .6rem 1rem; --btn-size: .76rem; }
+.btn--block { width: 100%; }
+
+/* ── surfaces ───────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow, none);
+}
+.chip {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .34rem .75rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  font-family: var(--font-ui);
+  font-size: .72rem;
+  letter-spacing: .04em;
+  color: var(--muted);
+}
+.dot { width: .42rem; height: .42rem; border-radius: 50%; background: var(--ok, var(--accent)); }
+
+/* ── form primitives ────────────────────────────────────── */
+.field { display: block; margin-bottom: .85rem; }
+.field > span {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: .68rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .38rem;
+}
+.field input, .field select, .field textarea {
+  width: 100%;
+  padding: .78rem .85rem;
+  background: var(--input-bg, var(--surface-2));
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: .92rem;
+  transition: border-color .2s, box-shadow .2s;
+}
+.field textarea { resize: vertical; min-height: 60px; }
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: 0;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+.field option { background: var(--surface); color: var(--text); }
+
+/* ── section frame ──────────────────────────────────────── */
+.section { padding: var(--section-pad, 5.5rem) 0; }
+.section--tint { background: var(--surface-2); }
+.section--accent {
+  background:
+    radial-gradient(70% 60% at 80% 0%, var(--accent-wash), transparent 62%),
+    var(--bg);
+}
+
+/* ── reveal ─────────────────────────────────────────────── */
+[data-reveal] { transition: opacity .65s var(--ease), transform .65s var(--ease); transition-delay: calc(var(--i, 0) * 80ms); }
+[data-reveal].pre { opacity: 0; transform: translateY(18px); }
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal], [data-reveal].pre { opacity: 1; transform: none; transition: none; }
+  * { animation: none !important; }
+}
+
+/* ── leaflet chrome (shared by any map component) ───────── */
+.leaflet-container { font-family: var(--font-body); background: var(--surface-2); }
+.leaflet-control-zoom { border: 0 !important; box-shadow: var(--shadow) !important; margin: 1rem 1rem 0 0 !important; }
+.leaflet-control-zoom a {
+  width: 32px !important; height: 32px !important; line-height: 30px !important;
+  background: var(--surface) !important; color: var(--text) !important;
+  border-color: var(--line) !important;
+}
+.leaflet-control-zoom a:hover { background: var(--accent) !important; color: var(--accent-ink) !important; }
+@media (max-width: 760px) {
+  .leaflet-control-zoom a { width: 44px !important; height: 44px !important; line-height: 42px !important; }
+}
+.leaflet-control-attribution {
+  background: color-mix(in srgb, var(--surface) 78%, transparent) !important;
+  color: var(--muted) !important;
+  font-size: .56rem !important;
+}
+.leaflet-control-attribution a { color: var(--muted) !important; }
+
+@media (max-width: 760px) {
+  body { --gutter: 1.25rem; --section-pad: 3.75rem; }
+  /* 44px minimum touch target (WCAG 2.5.5 / Apple HIG) */
+  .btn { min-height: 44px; }
+  .btn--sm { --btn-pad: .7rem 1.15rem; min-height: 44px; }
+  .field input, .field select, .field textarea { min-height: 46px; }
+}
+
+/* nav/minimal */
+.c-nav{position:fixed;inset:0 0 auto;z-index:200;padding:1rem 0;transition:background .3s,backdrop-filter .3s,border-color .3s,padding .3s;border-bottom:1px solid transparent}
+.c-nav.is-solid{background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(14px);border-bottom-color:var(--line);padding:.68rem 0}
+.c-nav__in{display:flex;align-items:center;gap:1.5rem;min-height:44px}
+.c-nav__brand{display:flex;align-items:baseline;gap:.45rem;padding:.55rem 0;min-height:44px;font-family:var(--font-display);font-size:1.15rem;letter-spacing:.01em;color:var(--text)}
+.c-nav__brand b{font-weight:var(--display-weight)}
+.c-nav__brand span{font-family:var(--font-ui);font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:var(--accent)}
+.c-nav__links{display:flex;gap:1.6rem;margin-inline-start:auto}
+.c-nav__links a{font-family:var(--font-ui);font-size:.78rem;letter-spacing:var(--btn-ls);text-transform:var(--btn-case);color:var(--muted);transition:color .2s}
+.c-nav__links a:hover{color:var(--text)}
+.c-nav__end{display:flex;align-items:center;gap:.9rem}
+.c-nav__tel{font-family:var(--font-ui);font-size:.78rem;letter-spacing:var(--btn-ls);text-transform:var(--btn-case);color:var(--muted);border-bottom:1px solid var(--line-strong);padding-bottom:1px}
+.c-nav__tel:hover{color:var(--accent);border-color:var(--accent)}
+@media(max-width:820px){
+  .c-nav__links{display:none}
+  .c-nav__brand b{white-space:nowrap}
+  .c-nav__brand span{display:none}   /* the tagline wraps the wordmark on a phone */
+  .c-nav__end{margin-inline-start:auto}
+  .c-nav__tel{display:none}
+}
+
+/* inverted nav: for a hero whose ground is the theme's ink. Kept at the end of the file
+   on purpose — .c-nav__brand and .c-nav__links a set their own colours above, and with
+   equal specificity the later rule wins. */
+.c-nav--invert .c-nav__brand,.c-nav--invert .c-nav__brand b,.c-nav--invert .c-nav__brand span,
+.c-nav--invert .c-nav__links a,.c-nav--invert .c-nav__tel{color:var(--bg)}
+.c-nav--invert .c-nav__links a:hover{color:color-mix(in srgb, var(--bg) 70%, transparent)}
+.c-nav--invert.is-solid{background:color-mix(in srgb, var(--text) 90%, transparent);
+  border-bottom-color:color-mix(in srgb, var(--bg) 14%, transparent)}
+
+.c-nav--invert .c-nav__brand span{color:color-mix(in srgb, var(--bg) 62%, transparent)}
+
+/* hero/statement */
+/* Type-led opener: oversized statement on the left, a cut-out dish on the right,
+   small caps facts across the top. Built for brands whose photography is product
+   shots, not rooms. */
+.c-hst{position:relative;padding:clamp(1.5rem,3vw,2.5rem) 0 clamp(2.5rem,5vw,4rem);
+  background:var(--bg);overflow:hidden}
+.c-hst__top{display:flex;align-items:flex-start;justify-content:space-between;gap:2rem;
+  padding-bottom:1.4rem;border-bottom:1px solid var(--line)}
+.c-hst__meta{display:flex;gap:clamp(1.2rem,3vw,3rem);margin:0;flex-wrap:wrap;justify-content:flex-end}
+.c-hst__meta div{margin:0}
+.c-hst__meta dt{font-family:var(--font-ui);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:.25rem}
+.c-hst__meta dd{margin:0;font-family:var(--font-ui);font-size:.82rem;letter-spacing:.02em;color:var(--text)}
+.c-hst__main{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.65fr);
+  align-items:center;gap:clamp(1rem,4vw,3.5rem);padding-top:clamp(1.8rem,4vw,3.4rem)}
+.c-hst__title{margin:0;font-family:var(--font-display);font-weight:var(--display-weight);
+  font-size:clamp(2.9rem,8.6vw,7.6rem);line-height:var(--display-lh);letter-spacing:var(--display-ls);
+  text-transform:var(--display-case,none);color:var(--text);text-wrap:balance}
+.c-hst__title span{display:block;color:var(--accent)}
+.c-hst__body{max-width:44ch;margin:clamp(1.1rem,2.2vw,1.8rem) 0 0;font-size:var(--step-1);
+  line-height:1.55;color:var(--muted)}
+.c-hst__actions{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:clamp(1.2rem,2.4vw,2rem)}
+.c-hst__art{position:relative;margin:0;display:flex;align-items:center;justify-content:center}
+.c-hst__art img{width:100%;max-height:clamp(240px,42vw,460px);object-fit:contain;
+  filter:drop-shadow(0 34px 40px rgb(29 27 22 / .22))}
+.c-hst__stamp{position:absolute;top:.2rem;left:-.4rem;transform:rotate(-7deg);
+  border:1px solid var(--accent);color:var(--accent);padding:.4rem .7rem;
+  font-family:var(--font-ui);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;
+  background:color-mix(in srgb, var(--bg) 72%, transparent)}
+@media(max-width:900px){
+  .c-hst__main{grid-template-columns:1fr;gap:1.4rem}
+  .c-hst__top{flex-direction:column;gap:.9rem}
+  .c-hst__meta{justify-content:flex-start;gap:1.4rem}
+  .c-hst__art{justify-content:flex-start}
+  .c-hst__art img{max-height:260px}
+  .c-hst__title{font-size:clamp(2.6rem,11vw,4rem)}
+}
+
+/* band/marquee */
+/* Word band: a repeating strip of short facts, scrolled sideways like a pub blackboard rail.
+   Grounds: default ink, --paper (paper ground, ink type), --accent (amber ground). */
+.c-band{position:relative;overflow:hidden;padding:.9rem 0;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  background:var(--surface-2);color:var(--text)}
+.c-band__track{display:flex;align-items:center;gap:1.1rem;width:max-content;
+  animation:band 64s linear infinite;will-change:transform}
+.c-band:hover .c-band__track{animation-play-state:paused}
+.c-band__item{font-family:var(--font-display);font-size:clamp(1.15rem,2.1vw,1.85rem);
+  line-height:1;letter-spacing:.01em;text-transform:var(--display-case,uppercase);
+  white-space:nowrap;color:var(--text)}
+.c-band__sep{font-size:.6rem;line-height:1;color:var(--accent);flex:none;transform:translateY(-1px)}
+.c-band__note{margin:.7rem auto 0;font-size:.72rem;letter-spacing:.04em;color:var(--muted)}
+.c-band--invert{background:var(--text);color:var(--bg);border-color:transparent}
+.c-band--invert .c-band__item{color:var(--bg)}
+.c-band--invert .c-band__sep{color:var(--accent)}
+.c-band--invert .c-band__note{color:color-mix(in srgb, var(--bg) 70%, transparent)}
+.c-band--paper{background:var(--surface);color:var(--text);border-color:var(--line)}
+.c-band--paper .c-band__item{color:var(--text)}
+.c-band--paper .c-band__sep{color:var(--accent)}
+.c-band--accent{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.c-band--accent .c-band__item{color:var(--accent-ink)}
+.c-band--accent .c-band__sep{color:color-mix(in srgb, var(--accent-ink) 55%, transparent)}
+.c-band--accent .c-band__note{color:color-mix(in srgb, var(--accent-ink) 72%, transparent)}
+@keyframes band{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+@media(max-width:760px){
+  .c-band{padding:.75rem 0}
+  .c-band__item{font-size:1.05rem}
+}
+@media (prefers-reduced-motion:reduce){
+  .c-band__track{animation:none;flex-wrap:wrap;width:auto;
+    padding-inline:max(1.25rem, calc((100vw - var(--max)) / 2));white-space:normal}
+  .c-band__track > *:nth-child(n+1){}
+}
+
+/* cards/dish */
+/* Menu wall: cut-out product photography on a tinted plate, category in small caps,
+   name set in the display face, price pinned to the bottom rule. Built for businesses
+   whose only images are dishes shot on white. */
+.c-dishes__head{max-width:var(--measure);margin-bottom:2.4rem}
+.c-dishes__head .u-h2{margin-top:.6rem}
+.c-dishes__head .u-lede{margin-top:.9rem}
+.c-dishes__body{display:grid;grid-template-columns:190px minmax(0,1fr);gap:clamp(1.2rem,3vw,3rem);
+  align-items:start}
+.c-dishes__index{position:sticky;top:5.5rem;display:flex;flex-direction:column;
+  border-top:1px solid var(--line-strong)}
+.c-dishes__idx{display:flex;align-items:center;justify-content:space-between;gap:.6rem;
+  min-height:44px;padding:.35rem 0;border-bottom:1px solid var(--line);text-decoration:none;
+  font-family:var(--font-ui);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);transition:color .2s}
+.c-dishes__idx em{font-style:normal;font-size:.66rem;letter-spacing:.02em;opacity:.7}
+.c-dishes__idx:hover{color:var(--accent)}
+.c-dishes__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:1rem}
+.c-dishes__card{position:relative;display:flex;flex-direction:column;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:.85rem .85rem 1rem;transition:border-color .25s,transform .25s var(--ease)}
+.c-dishes__card:hover{border-color:var(--line-strong);transform:translateY(-2px)}
+.c-dishes__plate{background:var(--surface-2);aspect-ratio:1/1;display:flex;
+  align-items:center;justify-content:center;overflow:hidden}
+.c-dishes__plate img{width:100%;height:100%;object-fit:contain;padding:6%;
+  transition:transform .6s var(--ease)}
+.c-dishes__card:hover .c-dishes__plate img{transform:scale(1.05)}
+.c-dishes__info{margin-top:.9rem}
+.c-dishes__cat{font-family:var(--font-ui);font-size:.6rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--accent)}
+.c-dishes__name{margin:.3rem 0 0;font-family:var(--font-display);font-weight:var(--display-weight);
+  font-size:1.16rem;line-height:1.1;letter-spacing:-.015em;color:var(--text)}
+.c-dishes__note{margin:.4rem 0 0;font-size:.8rem;line-height:1.45;color:var(--muted)}
+.c-dishes__price{margin-top:.8rem;padding-top:.55rem;border-top:1px solid var(--line);
+  font-family:var(--font-ui);font-size:.8rem;letter-spacing:.06em;color:var(--text)}
+.c-dishes__foot{margin-top:1.6rem;font-size:.8rem;color:var(--muted);
+  border-left:2px solid var(--accent);padding-left:.9rem;max-width:80ch}
+@media(max-width:900px){
+  .c-dishes__body{grid-template-columns:1fr}
+  .c-dishes__index{position:static;flex-direction:row;overflow-x:auto;border-top:0;
+    border-bottom:1px solid var(--line);gap:1.1rem;padding-bottom:.2rem}
+  .c-dishes__idx{border-bottom:0;white-space:nowrap;padding:.4rem 0}
+  .c-dishes__grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.7rem}
+  .c-dishes__name{font-size:1rem}
+}
+
+/* list/menu */
+.c-menu__head{max-width:var(--measure);margin-bottom:2.75rem}
+.c-menu__head .u-h2{margin-top:.6rem}
+.c-menu__head .u-lede{margin-top:1rem}
+.c-menu__groups{display:grid;grid-template-columns:repeat(2,1fr);gap:1.1rem;align-items:start}
+.c-menu__group{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1.5rem 1.6rem}
+.c-menu__grouphead{margin-bottom:1rem}
+.c-menu__grouphead h3{font-family:var(--font-display);font-size:var(--step-1);letter-spacing:-.01em}
+.c-menu__grouphead p{margin:.35rem 0 0;font-size:.84rem;color:var(--muted)}
+.c-menu__items{list-style:none;margin:0;padding:0}
+.c-menu__items li{display:flex;align-items:baseline;gap:.6rem;padding:.5rem 0;border-bottom:1px dashed var(--line)}
+.c-menu__items li:last-child{border-bottom:0;padding-bottom:0}
+.c-menu__n{flex:1;font-size:.94rem}
+.c-menu__n em{display:block;font-style:normal;font-size:.78rem;color:var(--muted);margin-top:.1rem}
+.c-menu__p{font-family:var(--font-ui);font-size:.86rem;color:var(--accent);white-space:nowrap}
+.c-menu__note{margin-top:1.4rem;font-size:.82rem;color:var(--muted);
+  border-left:2px solid var(--accent);padding-left:.9rem}
+/* layout="columns" floods groups down two balanced columns instead of a row-major
+   grid, so an odd number of groups of different heights does not leave a void. */
+.c-menu__groups[data-layout="columns"]{display:block;columns:2;column-gap:1.1rem}
+.c-menu__groups[data-layout="columns"] .c-menu__group{
+  display:inline-block;width:100%;margin:0 0 1.1rem;break-inside:avoid}
+@media(max-width:820px){
+  .c-menu__groups[data-layout="columns"]{columns:1}
+  .c-menu__groups{grid-template-columns:1fr}
+  .c-menu__group{padding:1.25rem 1.2rem}
+}
+
+/* cta/split */
+.c-split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.75rem,4vw,3.5rem);align-items:center}
+.c-split--flip .c-split__media{order:-1}
+.c-split__copy .u-h2{margin-top:.6rem}
+.c-split__copy .u-lede{margin-top:1.1rem}
+.c-split__list{list-style:none;margin:1.6rem 0 0;padding:0;display:grid;gap:.7rem}
+.c-split__list li{display:flex;gap:.65rem;align-items:flex-start;font-size:.93rem;color:var(--text)}
+.c-split__list svg{width:15px;height:15px;flex:none;margin-top:.32rem;color:var(--accent)}
+.c-split__actions{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.9rem}
+.c-split__media{margin:0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:var(--surface)}
+.c-split__media img{width:100%;height:100%;max-height:460px;object-fit:cover}
+@media(max-width:900px){
+  .c-split{grid-template-columns:1fr}
+  .c-split--flip .c-split__media{order:0}
+  .c-split__media img{max-height:300px}
+}
+
+/* quotes/marquee */
+.c-quotes{overflow:hidden}
+.c-quotes__head{max-width:var(--measure);margin-bottom:2.25rem}
+.c-quotes__head .u-h2{margin-top:.6rem}
+.c-quotes__viewport{position:relative;
+  mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.c-quotes__track{display:flex;gap:1rem;width:max-content;animation:marquee 46s linear infinite}
+.c-quotes__viewport:hover .c-quotes__track{animation-play-state:paused}
+@keyframes marquee{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+.c-quotes__card{margin:0;flex:0 0 clamp(260px,34vw,380px);
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:1.35rem 1.4rem 1.3rem;display:flex;flex-direction:column;gap:.8rem}
+.c-quotes__stars{font-size:.72rem;letter-spacing:.16em;color:var(--accent)}
+.c-quotes__card blockquote{margin:0;font-family:var(--font-display);font-size:1.02rem;line-height:1.38;letter-spacing:-.01em}
+.c-quotes__card figcaption{margin-top:auto;font-family:var(--font-ui);font-size:.74rem;color:var(--muted)}
+.c-quotes__card figcaption span{display:block;font-size:.68rem;letter-spacing:.04em;opacity:.8}
+.c-quotes__note{margin-top:1.1rem;font-size:.76rem;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){
+  .c-quotes__track{animation:none;width:auto;flex-wrap:wrap}
+  .c-quotes__card{flex:1 1 260px}
+  .c-quotes__card[aria-hidden="true"]{display:none}
+}
+
+/* faq/accordion */
+.c-faq{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(1.5rem,4vw,3.5rem);align-items:start}
+.c-faq__head{position:sticky;top:6rem}
+.c-faq__head .u-h2{margin-top:.6rem}
+.c-faq__list{display:grid;gap:.6rem}
+.c-faq__item{border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--surface);overflow:hidden}
+.c-faq__item[open]{border-color:var(--line-strong)}
+.c-faq__item summary{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:1rem 1.15rem;min-height:44px;cursor:pointer;list-style:none;
+  font-family:var(--font-ui);font-size:.94rem;font-weight:600;color:var(--text);
+}
+.c-faq__item summary::-webkit-details-marker{display:none}
+.c-faq__item summary svg{width:18px;height:18px;flex:none;color:var(--accent);transition:transform .25s var(--ease)}
+.c-faq__item[open] summary svg{transform:rotate(180deg)}
+.c-faq__a{padding:0 1.15rem 1.15rem}
+.c-faq__a p{margin:0;color:var(--muted);font-size:.92rem}
+.c-faq__note{margin-top:1.2rem;font-size:.8rem;color:var(--muted)}
+@media(max-width:880px){
+  .c-faq{grid-template-columns:1fr}
+  .c-faq__head{position:static}
+}
+
+/* map/leaflet */
+.c-map__frame{position:relative;height:clamp(320px, 46vw, 520px);border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:var(--surface-2)}
+.c-map__canvas{width:100%;height:100%}
+.c-map__canvas .leaflet-tile-pane{filter:var(--map-filter, none)}
+.c-map__frame::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:420;
+  border-radius:inherit;box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent)}
+.c-map__badge{position:absolute;left:1rem;top:1rem;z-index:450;display:inline-flex;align-items:center;gap:.4rem;
+  padding:.4rem .8rem;border-radius:999px;background:color-mix(in srgb, var(--surface) 90%, transparent);
+  backdrop-filter:blur(8px);border:1px solid var(--line);color:var(--text);
+  font-family:var(--font-ui);font-size:.7rem;letter-spacing:var(--btn-ls);text-transform:var(--btn-case)}
+.c-map__badge svg{width:13px;height:13px;color:var(--accent)}
+.c-map__cta{position:absolute;left:1rem;bottom:1rem;z-index:450;display:inline-flex;align-items:center;min-height:44px;padding:.6rem .95rem;border-radius:var(--radius-sm);
+  background:var(--accent);color:var(--accent-ink);font-family:var(--font-ui);font-size:.74rem;
+  letter-spacing:var(--btn-ls);text-transform:var(--btn-case);transition:transform .2s var(--ease)}
+.c-map__cta:hover{transform:translateY(-2px)}
+.pin-wrap{position:relative;width:40px;height:48px;display:grid;place-items:end center}
+.pin-halo{position:absolute;left:50%;bottom:5px;width:26px;height:26px;margin-left:-13px;border-radius:50%;
+  border:2px solid var(--accent);opacity:0;animation:pinHalo 2.8s cubic-bezier(.2,.6,.3,1) infinite}
+@keyframes pinHalo{0%{transform:scale(.55);opacity:.8}70%{transform:scale(2.2);opacity:0}100%{opacity:0}}
+.pin{width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);
+  background:var(--accent);border:2.5px solid var(--surface);
+  box-shadow:0 12px 22px -10px rgb(0 0 0/.7);display:grid;place-items:center}
+.pin i{width:8px;height:8px;border-radius:50%;background:var(--accent-ink);transform:rotate(45deg)}
+@media (prefers-reduced-motion:reduce){.pin-halo{animation:none;opacity:.4}}
+
+/* footer/columns */
+.c-foot{border-top:1px solid var(--line);background:var(--surface);padding:3.25rem 0 2.5rem}
+/* flex, not a fixed 3-track grid: a page with three link columns has four grid
+   children (brand + 3) and the last one wrapped onto a second row. */
+.c-foot__grid{display:flex;flex-wrap:wrap;gap:2rem;align-items:flex-start}
+.c-foot__brand{flex:1.6 1 300px}
+.c-foot__col{flex:1 1 140px}
+.c-foot__brand b{font-family:var(--font-display);font-size:1.2rem;font-weight:var(--display-weight)}
+.c-foot__brand p{margin:.7rem 0 0;color:var(--muted);font-size:.86rem;max-width:34ch}
+.c-foot__col h5{font-family:var(--font-ui);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin:0 0 .9rem}
+.c-foot__col a{display:flex;align-items:center;min-height:32px;font-size:.88rem;color:var(--muted);margin-bottom:.15rem;transition:color .2s}
+@media (max-width:760px){.c-foot__col a{min-height:44px}}
+.c-foot__col a:hover{color:var(--text)}
+.c-foot__legal{margin-top:2.5rem;padding-top:1.25rem;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+  font-family:var(--font-ui);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+@media(max-width:900px){.c-foot__brand{flex:1 1 100%}}
+
+/* handoff/mobile-bar */
+.c-mbar{display:none}
+@media(max-width:760px){
+  .c-mbar{
+    position:fixed;inset:auto 0 0;z-index:180;display:grid;
+    grid-auto-flow:column;grid-auto-columns:1fr;gap:.3rem;
+    padding:.45rem .45rem calc(.45rem + env(safe-area-inset-bottom));
+    background:color-mix(in srgb, var(--surface) 94%, transparent);
+    backdrop-filter:blur(14px);
+    border-top:1px solid var(--line);
+  }
+  .c-mbar a{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.18rem;
+    min-height:52px;border-radius:var(--radius-sm);
+    font-family:var(--font-ui);font-size:.66rem;letter-spacing:.04em;color:var(--text);
+  }
+  .c-mbar a svg{width:19px;height:19px}
+  .c-mbar a.is-primary{background:var(--accent);color:var(--accent-ink)}
+  body:has(.c-mbar) footer{padding-bottom:5.5rem}
+}
+
+/* project overrides */
+/* student-biryani — project composition.
+   1. The hero opens under a fixed nav, so it needs the nav's height as top padding. */
+.c-hst{padding-top:clamp(5.6rem,9vw,7.2rem)}
+
+/* 2. The catering panel holds a cut-out dish, not a photograph: contain it on the
+   tinted plate instead of cover-cropping it, and drop the media frame's border. */
+.c-split__media{background:var(--surface-2);border:0}
+.c-split__media img{object-fit:contain;padding:clamp(1rem,2.4vw,1.8rem);max-height:460px}
+
+/* 3. Dish wall: the biryani cards carry the brand, so give the plate a warmer tint than
+   the card it sits in and let the name sit tight under the category. */
+.c-dishes__plate{background:color-mix(in srgb, var(--surface-2) 82%, var(--bg))}
+.c-dishes__card{background:var(--bg)}
+.c-dishes__card:hover{background:var(--surface)}
+
+/* 4. The statement headline should not out-run the copy column on a laptop. */
+.c-hst__title{max-width:15ch}
+@media(max-width:900px){ .c-hst__title{max-width:none} }
+
+/* 5. Clear the fixed handoff bar on a phone. */
+@media(max-width:760px){ body{padding-bottom:72px} }
+
+</style>
+</head>
+<body>
+<header class="c-nav is-solid" data-component="nav/minimal">
+  <div class="u-wrap c-nav__in">
+    <a class="c-nav__brand" href="#top">
+      <b>Student Biryani</b><span>JVC · Dubai</span>
+    </a>
+    <nav class="c-nav__links" aria-label="Main">
+      <a href="#menu">Menu</a><a href="#deals">Deals</a><a href="#visit">Visit</a>
+    </nav>
+    <div class="c-nav__end">
+      <a class="c-nav__tel" href="tel:+97145546215">04 554 6215</a>
+      <a class="btn btn--sm" href="https://studentbiryani.ae/restaurant-order/">Order online</a>
+    </div>
+  </div>
+</header>
+
+<section class="c-hst" data-component="hero/statement" id="top">
+  <div class="u-wrap c-hst__top">
+    <span class="u-eyebrow">Jumeirah Village Circle · Dubai</span>
+    
+    <dl class="c-hst__meta">
+      <div><dt>Open</dt><dd>Daily 11 AM – 12 AM</dd></div><div><dt>Find us</dt><dd>Mulberry 1, Emirates Garden 2, JVC</dd></div><div><dt>Call</dt><dd>04 554 6215</dd></div>
+    </dl>
+    
+  </div>
+  <div class="u-wrap c-hst__main">
+    <div class="c-hst__copy">
+      <h1 class="c-hst__title">One bucket of biryani,<span>Karachi, 1969.</span></h1>
+      <p class="c-hst__body">In October 1969 Haji Muhammad Ali set up a stall on Katrak Road in Karachi with a few plates and one bucket of rice. Students queued, then generations queued. The same layered biryani is cooked fresh every day in JVC — chicken, mutton, tikka and the smoky barbecue one.</p>
+      
+      <div class="c-hst__actions">
+        <a class="btn" href="https://studentbiryani.ae/restaurant-order/">Order online</a><a class="btn btn--outline" href="#menu">See the menu</a>
+      </div>
+      
+    </div>
+    
+    <figure class="c-hst__art">
+      <img src="assets/chicken-biryani.webp" alt="A plate of Student Biryani chicken biryani with raitaOne bucket of biryani,">
+      <figcaption class="c-hst__stamp">From AED 30</figcaption>
+    </figure>
+    
+  </div>
+</section>
+
+<section class="c-band c-band--accent" data-component="band/marquee" aria-label="Student Biryani at a glanceAt a glance">
+  <div class="c-band__track" aria-hidden="true">
+    <span class="c-band__item">Since 1969</span><span class="c-band__sep">◆</span><span class="c-band__item">Karachi, Pakistan</span><span class="c-band__sep">◆</span><span class="c-band__item">Biryani from AED 30</span><span class="c-band__sep">◆</span><span class="c-band__item">Daily 11 AM – 12 AM</span><span class="c-band__sep">◆</span><span class="c-band__item">JVC, Dubai</span><span class="c-band__sep">◆</span><span class="c-band__item">Order online</span><span class="c-band__sep">◆</span>
+    <span class="c-band__item">Since 1969</span><span class="c-band__sep">◆</span><span class="c-band__item">Karachi, Pakistan</span><span class="c-band__sep">◆</span><span class="c-band__item">Biryani from AED 30</span><span class="c-band__sep">◆</span><span class="c-band__item">Daily 11 AM – 12 AM</span><span class="c-band__sep">◆</span><span class="c-band__item">JVC, Dubai</span><span class="c-band__sep">◆</span><span class="c-band__item">Order online</span><span class="c-band__sep">◆</span>
+  </div>
+  
+</section>
+
+<section class="section c-dishes" data-component="cards/dish" id="menu">
+  <div class="u-wrap c-dishes__head">
+    <span class="u-eyebrow">The menu</span>
+    <h2 class="u-h2">Cooked in layers, weighed by the plate.</h2>
+    <p class="u-lede">Biryani is assembled in layers and finished on the dum — never mixed. The curries are cooked to order in karahi and handi, which is why the karahi arrives still bubbling at the table.</p>
+  </div>
+  <div class="u-wrap c-dishes__body">
+    
+    <aside class="c-dishes__index" aria-label="Menu index">
+      
+      <a class="c-dishes__idx" href=""><span>Biryani & rice</span><em>4</em></a>
+      
+      <a class="c-dishes__idx" href=""><span>Curries & desi</span><em>6</em></a>
+      
+      <a class="c-dishes__idx" href="#deals#"><span>Deals</span><em>9</em></a>
+      
+    </aside>
+    
+    <div class="c-dishes__grid">
+      
+      <article class="c-dishes__card">
+        <div class="c-dishes__plate"><img src="assets/chicken-biryani.webp" alt="Chicken Biryani" loading="eager"></div>
+        <div class="c-dishes__info">
+          <span class="c-dishes__cat">Biryani</span>
+          <h3 class="c-dishes__name">Chicken Biryani</h3>
+          <p class="c-dishes__note">basmati layered with marinated chicken, served with raita</p>
+        </div>
+        <span class="c-dishes__price">AED 30</span>
+      </article>
+      
+      <article class="c-dishes__card">
+        <div class="c-dishes__plate"><img src="assets/mutton-biryani.webp" alt="Mutton Biryani" loading="eager"></div>
+        <div class="c-dishes__info">
+          <span class="c-dishes__cat">Biryani</span>
+          <h3 class="c-dishes__name">Mutton Biryani</h3>
+          <p class="c-dishes__note">slow-cooked mutton, whole spices, saffron rice</p>
+        </div>
+        <span class="c-dishes__price">AED 34</span>
+      </article>
+      
+      <article class="c-dishes__card">
+        <div class="c-dishes__plate"><img src="assets/tikka-biryani.webp" alt="Tikka Biryani" loading="eager"></div>
+        <div class="c-dishes__info">
+          <span class="c-dishes__cat">Biryani</span>
+          <h3 class="c-dishes__name">Tikka Biryani</h3>
+          <p class="c-dishes__note">chicken tikka folded through spiced rice</p>
+        </div>
+        
+      </article>
+      
+      <article class="c-dishes__card">
+        <div class="c-dishes__plate"><img src="assets/bbq-biryani.webp" alt="B.B.Q Biryani" loading="eager"></div>
+        <div class="c-dishes__info">
+          <span class="c-dishes__cat">Biryani</span>
+          <h3 class="c-dishes__name">B.B.Q Biryani</h3>
+          <p class="c-dishes__note">smoke from the grill in every forkful</p>
+        </div>
+        
+      </article>
+      
+      <article class="c-dishes__card">
+        <div class="c-dishes__plate"><img src="assets/nihari.webp" alt="Beef Nihari" loading="eager"></div>
+        <div class="c-dishes__info">
+          <span class="c-dishes__cat">Desi</span>
+          <h3 class="c-dishes__name">Beef Nihari</h3>
+          <p class="c-dishes__note">shank slow-cooked overnight, thick gravy, naan on the side</p>
+        </div>
+        <span class="c-dishes__price">AED 30</span>
+      </article>
+      
+      <article class="c-dishes__card">
+        <div class="c-dishes__plate"><img src="assets/haleem.webp" alt="Haleem" loading="eager"></div>
+        <div class="c-dishes__info">
+          <span class="c-dishes__cat">Desi</span>
+          <h3 class="c-dishes__name">Haleem</h3>
+          <p class="c-dishes__note">wheat, lentils and beef pounded soft — the review everyone quotes</p>
+        </div>
+        <span class="c-dishes__price">AED 22</span>
+      </article>
+      
+      <article class="c-dishes__card">
+        <div class="c-dishes__plate"><img src="assets/karahi.webp" alt="Chicken Karahi" loading="eager"></div>
+        <div class="c-dishes__info">
+          <span class="c-dishes__cat">Karahi</span>
+          <h3 class="c-dishes__name">Chicken Karahi</h3>
+          <p class="c-dishes__note">tomato, ginger and green chilli, finished in the wok</p>
+        </div>
+        <span class="c-dishes__price">AED 30</span>
+      </article>
+      
+      <article class="c-dishes__card">
+        <div class="c-dishes__plate"><img src="assets/mutton-karahi.webp" alt="Mutton Karahi" loading="eager"></div>
+        <div class="c-dishes__info">
+          <span class="c-dishes__cat">Karahi</span>
+          <h3 class="c-dishes__name">Mutton Karahi</h3>
+          <p class="c-dishes__note">bone-in mutton, longer cook, deeper gravy</p>
+        </div>
+        <span class="c-dishes__price">AED 34</span>
+      </article>
+      
+      <article class="c-dishes__card">
+        <div class="c-dishes__plate"><img src="assets/qorma.webp" alt="Chicken Badami Qorma" loading="eager"></div>
+        <div class="c-dishes__info">
+          <span class="c-dishes__cat">Desi</span>
+          <h3 class="c-dishes__name">Chicken Badami Qorma</h3>
+          <p class="c-dishes__note">almond and cream gravy, mild and rich</p>
+        </div>
+        <span class="c-dishes__price">AED 30</span>
+      </article>
+      
+      <article class="c-dishes__card">
+        <div class="c-dishes__plate"><img src="assets/qeema.webp" alt="Beef Qeema" loading="eager"></div>
+        <div class="c-dishes__info">
+          <span class="c-dishes__cat">Desi</span>
+          <h3 class="c-dishes__name">Beef Qeema</h3>
+          <p class="c-dishes__note">minced beef with peas or potatoes</p>
+        </div>
+        <span class="c-dishes__price">AED 26</span>
+      </article>
+      
+      <article class="c-dishes__card">
+        <div class="c-dishes__plate"><img src="assets/paya.webp" alt="Mutton Paya" loading="eager"></div>
+        <div class="c-dishes__info">
+          <span class="c-dishes__cat">Desi</span>
+          <h3 class="c-dishes__name">Mutton Paya</h3>
+          <p class="c-dishes__note">trotters simmered until the gravy turns sticky</p>
+        </div>
+        <span class="c-dishes__price">AED 30</span>
+      </article>
+      
+      <article class="c-dishes__card">
+        <div class="c-dishes__plate"><img src="assets/daal.webp" alt="Daal Fry" loading="eager"></div>
+        <div class="c-dishes__info">
+          <span class="c-dishes__cat">Vegetarian</span>
+          <h3 class="c-dishes__name">Daal Fry</h3>
+          <p class="c-dishes__note">yellow lentils tempered with cumin and fried garlic</p>
+        </div>
+        <span class="c-dishes__price">AED 18</span>
+      </article>
+      
+    </div>
+  </div>
+  <div class="u-wrap"><p class="c-dishes__foot">Prices are the brand's published UAE menu prices in November 2026 and can differ slightly by branch — the till price at JVC is the one that counts. Vegetarian: veggie biryani AED 20, veggie karahi AED 20, mix veg and kadhi pakora AED 18.</p></div>
+</section>
+
+<section class="section" id="menu" data-component="list/menu">
+  <div class="u-wrap">
+    <header class="c-menu__head">
+      <span class="u-eyebrow">Deals</span>
+      <h2 class="u-h2">Whole meals, priced by the table.</h2>
+      <p class="u-lede">The deals are built for students and families, which is how this place started. Every one of them is a full tray, not a sampler.</p>
+    </header>
+    <div class="c-menu__groups" data-layout="columns">
+      
+      <section class="c-menu__group">
+        <div class="c-menu__grouphead">
+          <h3 class="u-h3">For one</h3>
+          <p>Lunch, dinner, or the 2 AM shift.</p>
+        </div>
+        <ul class="c-menu__items">
+          
+          <li>
+            <span class="c-menu__n">Meal 1<em>2 pcs chicken, fries, dinner roll, drink</em></span>
+            <span class="c-menu__p">AED 22</span>
+          </li>
+          
+          <li>
+            <span class="c-menu__n">Meal 2<em>chicken biryani 500g, chicken pc, shami kabab, salad, raita, drink</em></span>
+            <span class="c-menu__p">AED 43</span>
+          </li>
+          
+          <li>
+            <span class="c-menu__n">Meal 3<em>chicken karahi, 2 naan, salad, raita, drink</em></span>
+            <span class="c-menu__p">AED 43</span>
+          </li>
+          
+          <li>
+            <span class="c-menu__n">Meal 6<em>haleem, 2 naan, drink</em></span>
+            <span class="c-menu__p">AED 29</span>
+          </li>
+          
+          <li>
+            <span class="c-menu__n">Meal 7<em>chicken biryani 500g, haleem, 2 naan, drink</em></span>
+            <span class="c-menu__p">AED 46</span>
+          </li>
+          
+          <li>
+            <span class="c-menu__n">Meal 8<em>biryani rice 450g, fried fish 200g, raita, drink</em></span>
+            <span class="c-menu__p">AED 40</span>
+          </li>
+          
+        </ul>
+      </section>
+      
+      <section class="c-menu__group">
+        <div class="c-menu__grouphead">
+          <h3 class="u-h3">For two</h3>
+          <p>Chargha, biryani and dessert.</p>
+        </div>
+        <ul class="c-menu__items">
+          
+          <li>
+            <span class="c-menu__n">Meal 4<em>chicken biryani, 2 qtr chargha or fried fish, 2 kheer, salad, raita, 2 drinks</em></span>
+            <span class="c-menu__p">AED 76</span>
+          </li>
+          
+          <li>
+            <span class="c-menu__n">Hot n Spicy<em>chicken biryani 500g, qtr chargha, raita, drink</em></span>
+            <span class="c-menu__p">AED 34</span>
+          </li>
+          
+        </ul>
+      </section>
+      
+      <section class="c-menu__group">
+        <div class="c-menu__grouphead">
+          <h3 class="u-h3">For the table</h3>
+          <p>Buckets, platters and family packs.</p>
+        </div>
+        <ul class="c-menu__items">
+          
+          <li>
+            <span class="c-menu__n">Meal 5<em>5 pcs crispy chicken each: 10 pcs, 5 fries, 5 rolls, 2.25L Coke</em></span>
+            <span class="c-menu__p">AED 82</span>
+          </li>
+          
+          <li>
+            <span class="c-menu__n">WOW Deal<em>large chicken biryani, zarda or kheer, shami kabab, salad, raita, Coke</em></span>
+            <span class="c-menu__p">AED 52</span>
+          </li>
+          
+          <li>
+            <span class="c-menu__n">Large BBQ Platter<em>malai boti, 2 seekh, 2 reshmi, behari kabab, naan, Coke</em></span>
+            <span class="c-menu__p">AED 70</span>
+          </li>
+          
+          <li>
+            <span class="c-menu__n">Biryani Bucket Family Combo<em>regular chicken biryani bucket, 2 salads, 2.25L Coke</em></span>
+            <span class="c-menu__p">AED 149</span>
+          </li>
+          
+        </ul>
+      </section>
+      
+      <section class="c-menu__group">
+        <div class="c-menu__grouphead">
+          <h3 class="u-h3">Breakfast</h3>
+          <p>Served from opening — the Karachi morning.</p>
+        </div>
+        <ul class="c-menu__items">
+          
+          <li>
+            <span class="c-menu__n">Halwa Puri<em>one set with chana and tarkari</em></span>
+            <span class="c-menu__p">AED 15</span>
+          </li>
+          
+          <li>
+            <span class="c-menu__n">Nihari<em>small or large, with naan</em></span>
+            <span class="c-menu__p">AED 30</span>
+          </li>
+          
+          <li>
+            <span class="c-menu__n">Omelette<em>with paratha</em></span>
+            <span class="c-menu__p">AED 16</span>
+          </li>
+          
+        </ul>
+      </section>
+      
+    </div>
+    <p class="c-menu__note">Deal contents and prices are copied from the brand's UAE ordering page in November 2026. Availability by time of day varies at the branch — call 04 554 6215 if you are ordering a bucket for a crowd.</p>
+  </div>
+</section>
+
+<section class="c-band c-band--invert" data-component="band/marquee" aria-label="Also on the menuAt a glance">
+  <div class="c-band__track" aria-hidden="true">
+    <span class="c-band__item">Halwa Puri</span><span class="c-band__sep">◆</span><span class="c-band__item">Chicken Tikka</span><span class="c-band__sep">◆</span><span class="c-band__item">Seekh Kabab</span><span class="c-band__sep">◆</span><span class="c-band__item">Grilled Chargha</span><span class="c-band__sep">◆</span><span class="c-band__item">Kheer</span><span class="c-band__sep">◆</span><span class="c-band__item">Zarda</span><span class="c-band__sep">◆</span><span class="c-band__item">Tandoori Naan</span><span class="c-band__sep">◆</span><span class="c-band__item">Fish Tikka</span><span class="c-band__sep">◆</span>
+    <span class="c-band__item">Halwa Puri</span><span class="c-band__sep">◆</span><span class="c-band__item">Chicken Tikka</span><span class="c-band__sep">◆</span><span class="c-band__item">Seekh Kabab</span><span class="c-band__sep">◆</span><span class="c-band__item">Grilled Chargha</span><span class="c-band__sep">◆</span><span class="c-band__item">Kheer</span><span class="c-band__sep">◆</span><span class="c-band__item">Zarda</span><span class="c-band__sep">◆</span><span class="c-band__item">Tandoori Naan</span><span class="c-band__sep">◆</span><span class="c-band__item">Fish Tikka</span><span class="c-band__sep">◆</span>
+  </div>
+  
+</section>
+
+<section class="section section--tint" data-component="cta/split">
+  <div class="u-wrap c-split c-split--flip">
+    <div class="c-split__copy">
+      <span class="u-eyebrow">Catering</span>
+      <h2 class="u-h2">A hundred plates, one kitchen.</h2>
+      <p class="u-lede">The JVC branch cooks for majlis, office lunches and school events — biryani by the bucket, karahi by the tray, naan by the dozen. Order a day ahead and it arrives hot, in trays, with raita and salad already portioned.</p>
+      
+      <ul class="c-split__list">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>Biryani buckets and family packs for 5 to 50</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>Karahi, qorma and haleem by the tray</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>Vegetarian lines: daal, kadhi pakora, mix veg</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>Branches in Dubai, Abu Dhabi, Sharjah and Ajman</li>
+      </ul>
+      
+      <div class="c-split__actions">
+        <a class="btn" href="tel:+97145546215">Call the branch</a>
+        <a class="btn btn--outline" href="https://studentbiryani.ae/restaurant-order/">The full menu</a>
+      </div>
+    </div>
+    <figure class="c-split__media"><img src="assets/karahi.webp" alt="Chicken karahi cooked in a black wok" loading="eager"></figure>
+  </div>
+</section>
+
+<section class="section section--tint c-quotes" data-component="quotes/marquee">
+  <div class="u-wrap">
+    <header class="c-quotes__head">
+      <span class="u-eyebrow">Reviews</span>
+      <h2 class="u-h2">4.5 on Google. 4.3 from 149 on Tripadvisor.</h2>
+    </header>
+  </div>
+  <div class="c-quotes__viewport">
+    <div class="c-quotes__track">
+      
+      <figure class="c-quotes__card">
+        <span class="c-quotes__stars" aria-label="★★★★★ out of 5">★★★★★</span>
+        <blockquote>Great service by Shafeeq bhai. The only thing I like from their menu is their Haleem. I paid AED 28 for this meal. It is one of the best Haleem in Dubai.</blockquote>
+        <figcaption>Musfir Khawaja<span>Google review · September 2025</span></figcaption>
+      </figure>
+      
+      <figure class="c-quotes__card">
+        <span class="c-quotes__stars" aria-label="★★★★★ out of 5">★★★★★</span>
+        <blockquote>The biryani was perfectly spiced, with tender meat and fragrant rice — just like the authentic taste I remember. The portions were generous and the service was quick and friendly.</blockquote>
+        <figcaption>Tripadvisor review<span>JVC branch · May 2025</span></figcaption>
+      </figure>
+      
+      <figure class="c-quotes__card">
+        <span class="c-quotes__stars" aria-label="★★★★★ out of 5">★★★★★</span>
+        <blockquote>Superb food. Shafique Bhai suggested the chicken combo and it was top notch — and he gave us free phirni at the end.</blockquote>
+        <figcaption>Google review<span>July 2025</span></figcaption>
+      </figure>
+      
+      <figure class="c-quotes__card">
+        
+        <blockquote>The food is really tasty, but compared to the price it is expensive — one piece of chicken and some biryani rice is AED 30.</blockquote>
+        <figcaption>Atiqur Rahman<span>Google review · July 2025</span></figcaption>
+      </figure>
+      
+      
+      <figure class="c-quotes__card" aria-hidden="true">
+        <span class="c-quotes__stars">★★★★★</span>
+        <blockquote>Great service by Shafeeq bhai. The only thing I like from their menu is their Haleem. I paid AED 28 for this meal. It is one of the best Haleem in Dubai.</blockquote>
+        <figcaption>Musfir Khawaja<span>Google review · September 2025</span></figcaption>
+      </figure>
+      
+      <figure class="c-quotes__card" aria-hidden="true">
+        <span class="c-quotes__stars">★★★★★</span>
+        <blockquote>The biryani was perfectly spiced, with tender meat and fragrant rice — just like the authentic taste I remember. The portions were generous and the service was quick and friendly.</blockquote>
+        <figcaption>Tripadvisor review<span>JVC branch · May 2025</span></figcaption>
+      </figure>
+      
+      <figure class="c-quotes__card" aria-hidden="true">
+        <span class="c-quotes__stars">★★★★★</span>
+        <blockquote>Superb food. Shafique Bhai suggested the chicken combo and it was top notch — and he gave us free phirni at the end.</blockquote>
+        <figcaption>Google review<span>July 2025</span></figcaption>
+      </figure>
+      
+      <figure class="c-quotes__card" aria-hidden="true">
+        
+        <blockquote>The food is really tasty, but compared to the price it is expensive — one piece of chicken and some biryani rice is AED 30.</blockquote>
+        <figcaption>Atiqur Rahman<span>Google review · July 2025</span></figcaption>
+      </figure>
+      
+    </div>
+  </div>
+  <div class="u-wrap"><p class="c-quotes__note">Quoted verbatim from public reviews read in November 2026 — the critical one included, because a menu with AED 30 plates should say so out loud.</p></div>
+</section>
+
+<section class="section" data-component="faq/accordion" id="visit">
+  <div class="u-wrap c-faq">
+    <header class="c-faq__head">
+      <span class="u-eyebrow">Practical</span>
+      <h2 class="u-h2">Before you order.</h2>
+      <p class="u-lede">Taken from the branch listing and the brand's own site, not from guesswork.</p>
+    </header>
+    <div class="c-faq__list">
+      
+      <details class="c-faq__item">
+        <summary>What time are you open?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <div class="c-faq__a"><p>Daily from 11 AM to midnight. The kitchen takes its last orders around 11:45 PM.</p></div>
+      </details>
+      
+      <details class="c-faq__item">
+        <summary>Where is the JVC branch?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <div class="c-faq__a"><p>Mulberry 1, Emirates Garden 2, Shop #1, District 14 — on the JVC circle. The plus code is 26X4+X5 Dubai and the map below drops you at the door.</p></div>
+      </details>
+      
+      <details class="c-faq__item">
+        <summary>Can I get it delivered?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <div class="c-faq__a"><p>Yes — order direct on studentbiryani.ae, or through Talabat, Zomato or Deliveroo. The branch covers JVC and the streets around the circle.</p></div>
+      </details>
+      
+      <details class="c-faq__item">
+        <summary>What should a first-timer order?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <div class="c-faq__a"><p>Chicken biryani with raita, a haleem to share, and naan. If you want the table to go quiet, add the mutton karahi.</p></div>
+      </details>
+      
+      <details class="c-faq__item">
+        <summary>Is there anything vegetarian?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <div class="c-faq__a"><p>Veggie biryani AED 20, veggie karahi AED 20, daal fry and kadhi pakora AED 18, mix veg AED 18. The daal is cooked fresh through the day.</p></div>
+      </details>
+      
+      <details class="c-faq__item">
+        <summary>Do you cater for events?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <div class="c-faq__a"><p>Biryani buckets, family packs and trays of karahi or haleem for 5 to 50 people. Call 04 554 6215 a day ahead and the branch will price it.</p></div>
+      </details>
+      
+      <details class="c-faq__item">
+        <summary>Which other branches are there?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <div class="c-faq__a"><p>In Dubai: Al Karama, Silicon Oasis, Al Barsha and JVC. Elsewhere: Al Reef, Shabiya and Corniche in Abu Dhabi, Sharjah, and Al Rashidiya in Ajman.</p></div>
+      </details>
+      
+    </div>
+    <p class="c-faq__note">Hours, address and branch list read from the JVC Google listing and studentbiryani.ae on 12 November 2026.</p>
+  </div>
+</section>
+
+<section class="section" data-component="map/leaflet">
+  <div class="u-wrap c-map">
+    <div class="c-map__frame" data-lat="25.0499776" data-lng="55.2054442" data-zoom="17" data-label="Student Biryani JVC">
+      <div class="c-map__canvas" role="img" aria-label="Map: Student Biryani JVC"></div>
+      <span class="c-map__badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11Z"/><circle cx="12" cy="10" r="2.3"/></svg>Mulberry 1 · JVC</span>
+      <a class="c-map__cta" href="https://www.google.com/maps/dir/?api=1&destination=25.0499776,55.2054442" target="_blank" rel="noopener">Get directions</a>
+    </div>
+  </div>
+</section>
+
+<footer class="c-foot" data-component="footer/columns">
+  <div class="u-wrap">
+    <div class="c-foot__grid">
+      <div class="c-foot__brand">
+        <b>Student Biryani</b>
+        <p>Biryani in layers since 1969, cooked fresh at Mulberry 1 in Jumeirah Village Circle. Dine in, take away, or order to the door.</p>
+      </div>
+      
+      <div class="c-foot__col">
+        <h5>Find us</h5>
+        <a href="https://www.google.com/maps/dir/?api=1&destination=25.0499776,55.2054442">Mulberry 1, Emirates Garden 2, Shop #1</a><a href="https://www.google.com/maps/dir/?api=1&destination=25.0499776,55.2054442">District 14, JVC, Dubai</a><a href="https://www.google.com/maps/search/?api=1&query=26X4%2BX5+Dubai">26X4+X5 Dubai</a>
+      </div>
+      
+      <div class="c-foot__col">
+        <h5>Hours</h5>
+        <a href="#visit">Daily · 11 AM – 12 AM</a><a href="#deals">Breakfast from 11 AM</a><a href="#deals">Deals & family packs</a>
+      </div>
+      
+      <div class="c-foot__col">
+        <h5>Order</h5>
+        <a href="tel:+97145546215">04 554 6215</a><a href="tel:+971549951054">054 995 1054</a><a href="https://studentbiryani.ae/restaurant-order/">studentbiryani.ae</a><a href="https://www.instagram.com/studentbiryaniuae">@studentbiryaniuae</a>
+      </div>
+      
+    </div>
+    <div class="c-foot__legal">
+      <span>© Student Biryani, JVC · Dubai</span>
+      <span>An independent page built from the branch's public listing and the brand's published menu, read on 12 November 2026. Dish photographs are the brand's own menu shots.</span>
+    </div>
+  </div>
+</footer>
+
+<nav class="c-mbar" aria-label="Quick actions" data-component="handoff/mobile-bar">
+  
+  <a href="tel:+97145546215" class="is-primary">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 4h4l2 5-2.5 1.5a12 12 0 0 0 6 6L15 14l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 2 6a2 2 0 0 1 2-2"/></svg>
+    <span>Call</span>
+  </a>
+  
+  <a href="https://www.google.com/maps/dir/?api=1&destination=25.0499776,55.2054442" class="" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11zM12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>
+    <span>Map</span>
+  </a>
+  
+  <a href="https://studentbiryani.ae/restaurant-order/" class="">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12zM6 6 5 3H2M9 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM18 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+    <span>Order</span>
+  </a>
+  
+</nav>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+/* nav/minimal */
+(() => {
+  const el = document.querySelector('[data-component="nav/minimal"]');
+  if (!el) return;
+  const onScroll = () => el.classList.toggle('is-solid', window.scrollY > 30);
+  onScroll();
+  addEventListener('scroll', onScroll, { passive: true });
+})();
+
+
+/* map/leaflet */
+(() => {
+  const frames = document.querySelectorAll('[data-component="map/leaflet"] .c-map__frame');
+  frames.forEach(frame => {
+    if (!window.L) return;
+    const ll = [+frame.dataset.lat, +frame.dataset.lng];
+    const map = L.map(frame.querySelector('.c-map__canvas'), {
+      center: ll, zoom: +frame.dataset.zoom || 16, zoomControl: false,
+      scrollWheelZoom: false, zoomSnap: .5, zoomDelta: .5
+    });
+    map.createPane('labels');
+    map.getPane('labels').style.zIndex = 250;
+    map.getPane('labels').style.pointerEvents = 'none';
+
+    const esri = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
+    const base = L.tileLayer(esri + 'Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 17, maxNativeZoom: 16,
+      attribution: 'Basemap &copy; <a href="https://www.esri.com" target="_blank" rel="noopener">Esri</a>'
+    }).addTo(map);
+    const labels = L.tileLayer(esri + 'Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 17, maxNativeZoom: 16, pane: 'labels'
+    }).addTo(map);
+
+    let fails = 0, switched = false;
+    const fallback = () => {
+      if (switched) return; switched = true;
+      try { map.removeLayer(base); } catch (e) {}
+      try { map.removeLayer(labels); } catch (e) {}
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        subdomains: 'abc', maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
+      }).addTo(map);
+      map.setView(ll, +frame.dataset.zoom || 16);
+    };
+    base.on('tileerror', () => { if (++fails >= 2) fallback(); });
+    setTimeout(() => { if (!frame.querySelector('.leaflet-tile-loaded')) fallback(); }, 4000);
+
+    L.control.zoom({ position: 'topright' }).addTo(map);
+    const icon = L.divIcon({ className: '', html: '<div class="pin-wrap"><span class="pin-halo"></span><div class="pin"><i></i></div></div>',
+      iconSize: [40,48], iconAnchor: [20,48] });
+    L.marker(ll, { icon, title: frame.dataset.label }).addTo(map);
+  });
+})();
+
+});
+</script>
+</body>
+</html>
